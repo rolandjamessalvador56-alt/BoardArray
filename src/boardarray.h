@@ -13,39 +13,30 @@ class BoardArray : public Board {
             index = 0;
         }
 
+ ~BoardArray() {
+        delete[] array; 
+    }
+
     void add(Entry* entry) override {
-    int pos = index; 
-    for (int i = 0; i < index; i++) {
-        Entry* current = array + i; 
-        if (entry->compare(current)) { 
-            pos = i;
-            break;
+        int pos = 0;
+        while (pos < index && array[pos].getPriority() >= entry->getPriority()) {
+            pos++;
         }
-    }
-
-    if (index < SIZE) {
-       
-        for (int j = index; j > pos; j--) {
-            array[j] = array[j - 1];
-        }
-        array[pos] = *entry;
-        index++;
-    } else {
-        if (pos < SIZE) {
-            for (int j = SIZE - 1; j > pos; j--) {
-                array[j] = array[j - 1];
+        if (index < SIZE) {
+            for (int i = index; i > pos; i--) {
+                array[i] = array[i - 1]; 
             }
-            array[pos] = *entry;
+            array[pos] = *entry; 
+            index++;
         } else {
-            cout << entry->name << "'s score is too low to be added!\n";
+            cout << "Board is full. Cannot add more entries." << endl;
         }
     }
-}
 
-    void print() override {
+    void print() override { 
         for (int i = 0; i < index; i++) {
             cout << i + 1 << ". ";
-            array[i].print();
+            array[i].print(); 
         }
     }
 };
